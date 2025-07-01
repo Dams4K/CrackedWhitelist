@@ -5,7 +5,8 @@
   "refmap": "mixins.crackedwhitelist.refmap.json",
   "server": [
     "MixinUserWhiteListEntry",
-    "MixinUserWhiteList"
+    "MixinUserWhiteList",
+    "MixinOldUsersConverter"
   ],
   "injectors": {
     "defaultRequire": 1

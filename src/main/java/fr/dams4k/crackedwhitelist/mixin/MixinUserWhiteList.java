@@ -8,26 +8,27 @@ import net.minecraft.server.players.UserWhiteList;
 import net.minecraft.server.players.UserWhiteListEntry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import java.io.File;
 
 @Mixin(UserWhiteList.class)
 public abstract class MixinUserWhiteList extends StoredUserList<GameProfile, UserWhiteListEntry> {
-    public MixinUserWhiteList(File p_11380_) {
-        super(p_11380_);
+    public MixinUserWhiteList(File file) {
+        super(file);
     }
 
-    /**
-     * @author Dams4K
-     * @reason A new file is used to store whitelisted players to not override the existing whitelist.json file
-     */
-    @ModifyVariable(method = "<init>", at = @At("LOAD"))
-    private static File injectFile(File file) {
-        return new File(file.getParentFile(), "offline_" + file.getName());
-    }
+//    /**
+//     * @author Dams4K
+//     * @reason A new file is used to store whitelisted players to not override the existing whitelist.json file
+//     */
+//    @ModifyVariable(method = "<init>", at = @At("LOAD"))
+//    private static File injectFile(File file) {
+//        CrackedWhitelist.LOGGER.info("Mode :" + String.valueOf(CrackedWhitelist.ONLINE_MODE));
+//        if (CrackedWhitelist.ONLINE_MODE) return file;
+//        return new File(file.getParentFile(), "offline_" + file.getName());
+//    }
 
     /**
      * @author Dams4K
@@ -35,6 +36,7 @@ public abstract class MixinUserWhiteList extends StoredUserList<GameProfile, Use
      */
     @Overwrite
     protected String getKeyForUser(GameProfile gameProfile) {
+        if (CrackedWhitelist.ONLINE_MODE) return gameProfile.getId().toString();
         String playerName = gameProfile.getName();
         return UUIDUtil.createOfflinePlayerUUID(playerName).toString();
     }

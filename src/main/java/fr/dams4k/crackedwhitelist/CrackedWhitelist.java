@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.commands.WhitelistCommand;
+import net.minecraft.server.dedicated.DedicatedServerProperties;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -40,6 +41,8 @@ public class CrackedWhitelist
     public static final String MODID = "crackedwhitelist";
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
+    // Is the server in online mode ?
+    public static boolean ONLINE_MODE = false;
 
     public CrackedWhitelist(FMLJavaModLoadingContext context)  {
         // Register ourselves for server and other game events we are interested in
@@ -48,8 +51,12 @@ public class CrackedWhitelist
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event)
-    {
-        LOGGER.info("HELLO from server starting");
+    public void onServerStarting(ServerStartingEvent event) {
+        ONLINE_MODE = event.getServer().usesAuthentication();
+
+//        DedicatedServerProperties.loadFromFile()
+
+        String mode = ONLINE_MODE ? "ONLINE" : "OFFLINE";
+        LOGGER.info("Server starting in " + mode + " mode");
     }
 }
