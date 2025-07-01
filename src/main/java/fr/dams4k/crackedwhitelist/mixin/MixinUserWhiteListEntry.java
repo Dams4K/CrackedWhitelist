@@ -26,14 +26,6 @@ public abstract class MixinUserWhiteListEntry {
     @Inject(at = @At(value = "TAIL"), method = "serialize")
     protected void onSerialize(JsonObject jsonObject, CallbackInfo callbackInfo) {
         String playerName = jsonObject.get("name").getAsString();
-        String myName = "Dams4K";
-
-        CrackedWhitelist.LOGGER.info(myName);
-        CrackedWhitelist.LOGGER.info(playerName);
-        CrackedWhitelist.LOGGER.info(String.valueOf("Dams4K".equalsIgnoreCase(playerName)));
-        CrackedWhitelist.LOGGER.info(UUIDUtil.createOfflinePlayerUUID("Dams4K").toString());
-        CrackedWhitelist.LOGGER.info(UUIDUtil.createOfflinePlayerUUID(playerName).toString());
-
         jsonObject.addProperty("uuid", UUIDUtil.createOfflinePlayerUUID(playerName).toString());
     }
 }
