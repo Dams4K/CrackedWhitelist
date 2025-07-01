@@ -25,13 +25,6 @@ public abstract class MixinUserWhiteList extends StoredUserList<GameProfile, Use
         return new File(file.getParentFile(), "offline_" + file.getName());
     }
 
-
-    @Inject(at = @At(value = "TAIL"), method = "<init>")
-    public void constructorHead(File whitelistFile, CallbackInfo ci) {
-        whitelistFile = new File(whitelistFile.getParentFile(), "cracked-" + whitelistFile.getName());
-        CrackedWhitelist.LOGGER.info("INSTANCE CREATED " + whitelistFile.getAbsolutePath());
-    }
-
     /**
      * @author
      * @reason
