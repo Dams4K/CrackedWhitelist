@@ -1,13 +1,37 @@
 package fr.dams4k.crackedwhitelist.mixin;
 
 import com.mojang.authlib.GameProfile;
+import fr.dams4k.crackedwhitelist.CrackedWhitelist;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.server.players.StoredUserList;
 import net.minecraft.server.players.UserWhiteList;
+import net.minecraft.server.players.UserWhiteListEntry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.io.File;
 
 @Mixin(UserWhiteList.class)
-public class MixinUserWhiteList {
+public abstract class MixinUserWhiteList extends StoredUserList<GameProfile, UserWhiteListEntry> {
+    public MixinUserWhiteList(File p_11380_) {
+        super(p_11380_);
+    }
+
+    @ModifyVariable(method = "<init>", at = @At("LOAD"))
+    private static File injectFile(File file) {
+        return new File(file.getParentFile(), "offline_" + file.getName());
+    }
+
+
+    @Inject(at = @At(value = "TAIL"), method = "<init>")
+    public void constructorHead(File whitelistFile, CallbackInfo ci) {
+        whitelistFile = new File(whitelistFile.getParentFile(), "cracked-" + whitelistFile.getName());
+        CrackedWhitelist.LOGGER.info("INSTANCE CREATED " + whitelistFile.getAbsolutePath());
+    }
+
     /**
      * @author
      * @reason
