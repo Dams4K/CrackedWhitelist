@@ -19,16 +19,14 @@ public abstract class MixinUserWhiteList extends StoredUserList<GameProfile, Use
         super(file);
     }
 
-//    /**
-//     * @author Dams4K
-//     * @reason A new file is used to store whitelisted players to not override the existing whitelist.json file
-//     */
-//    @ModifyVariable(method = "<init>", at = @At("LOAD"))
-//    private static File injectFile(File file) {
-//        CrackedWhitelist.LOGGER.info("Mode :" + String.valueOf(CrackedWhitelist.ONLINE_MODE));
-//        if (CrackedWhitelist.ONLINE_MODE) return file;
-//        return new File(file.getParentFile(), "offline_" + file.getName());
-//    }
+    /**
+     * @author Dams4K
+     * @reason A new file is used to store whitelisted players to not override the existing whitelist.json file
+     */
+    @ModifyVariable(method = "<init>", at = @At("LOAD"))
+    private static File injectFile(File file) {
+        return new File(file.getParentFile(), "cracked_" + file.getName());
+    }
 
     /**
      * @author Dams4K
@@ -36,7 +34,6 @@ public abstract class MixinUserWhiteList extends StoredUserList<GameProfile, Use
      */
     @Overwrite
     protected String getKeyForUser(GameProfile gameProfile) {
-        if (CrackedWhitelist.ONLINE_MODE) return gameProfile.getId().toString();
         String playerName = gameProfile.getName();
         return UUIDUtil.createOfflinePlayerUUID(playerName).toString();
     }
